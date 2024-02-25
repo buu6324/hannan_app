@@ -1,0 +1,55 @@
+<template>
+  <div id="map" class="map"></div>
+</template>
+
+<script>
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+export default {
+  name: 'MapViewLeaflet',
+  mounted() {
+    const map = L.map('map', {
+      minZoom: 10, // 最小缩放级别
+      maxZoom: 15, // 最大缩放级别
+    }).setView([30.27973175048828, 113.92793273925781], 12);
+
+    const layers = [
+      'npk_table',
+      'xzq_table',
+      'dzg_table',
+      'dgg_table',
+      'dgz_table',
+      'dzg_table',
+      'dzz_table',
+      'ggg_table',
+      'ggz_table',
+      'zdz_table',
+      'zgg_table',
+      'zgz_table',
+      'zzz_table',
+      'xzq_table',
+      'dk_table',
+      'point_table'
+      // 添加更多的图层名称...
+    ].forEach(layerName => {
+      L.tileLayer.wms("http://localhost:8080/geoserver/hannan/wms", {
+        layers: `hannan:${layerName}`,
+        format: 'image/png',
+        version: '1.1.0',
+        transparent: true,
+        tileSize: 128, // 根据需要调整
+        styles: `${layerName}`, // geoserver的style中自定义颜色,与表同名
+        srs: 'EPSG:4326', // 根据需要选择'EPSG:4326'或'EPSG:3857'
+      }).addTo(map);
+    });
+  }
+};
+</script>
+
+<style>
+.map {
+  height: 400px;
+  width: 100%;
+}
+</style>
